@@ -1,5 +1,6 @@
 from models import player_model
 from views import player_view
+from controllers import main_controller
 
 class CreatePlayer:
     """Enter the player's informations and add him into the database"""
@@ -11,6 +12,8 @@ class CreatePlayer:
         					'Sexe', 
         					'Classement'
         					]
+        self.main_menu_controller = main_controller.MainMenuController()
+
 
     def __call__(self):
         self.player_model = player_model.Player()
@@ -20,7 +23,8 @@ class CreatePlayer:
         self.player_values.append(self.add_gender())
         self.player_values.append(self.add_ranking())
         self.player_model.add_to_db(self.player_values)
-
+        self.main_menu_controller()
+        
 
     def add_last_name(self):
         last_name = input('Nom de famille : ')
@@ -86,4 +90,3 @@ class CreatePlayer:
             else:
                 ranking = input('Classement invalide. '
                                 'Entrez le classement du joueur : ')
-

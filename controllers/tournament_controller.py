@@ -1,9 +1,12 @@
 from models import tournament_model
 from views import tournament_view
+from controllers import main_controller
+
 
 class CreateTournament:
-    """Enter the tournament's informations and add him into the database"""
+    """Enter the tournament's informations and add it into the database"""
     def __init__(self):
+        self.create_menu = create_menus.CreateMenus()
         self.tournament_values = []
         self.tournament_keys = ['Nom',
                                 'Lieu',
@@ -13,6 +16,8 @@ class CreateTournament:
                                 'Description'
                                 ]
         self.players_entry = []
+        self.main_menu_controller = main_controller.MainMenuController()
+
 
     def __call__(self):
         self.tournament_values.append(self.add_tournament_name())
@@ -22,6 +27,7 @@ class CreateTournament:
         self.tournament_values.append(self.add_time_control())
         self.tournament_values.append(self.add_description())
         self.tournament_model.add_to_db(self.tournament_values)
+        self.main_menu_controller()
 
 
     def add_tournament_name(self):
@@ -31,11 +37,13 @@ class CreateTournament:
                                     'Entrez le nom du tournoi : ')
         return tournament_name
 
+
     def add_location(self):
         tournament_location = input('Lieu du tournoi : ')
         while tournament_location == '':
             tournament_location = input('Lieu invalide. '
                                         'Entrez le lieu du tournoi : ')
+
 
     def add_tournament_date(self):
         tournament_day = input('Entrez le jour du tournoi : ')
@@ -70,6 +78,7 @@ class CreateTournament:
 
         return f'{tournament_day}/{tournament_month}/{tournament_year}'
 
+
     def add_number_of_rounds(self):
         number_of_rounds = 4
         print('Le nombre de tours par défaut est de 4. \n'
@@ -88,6 +97,7 @@ class CreateTournament:
             if round_choice == 'N':
                 valid_rounds_number = True
         return number_of_rounds
+
 
     def add_time_control(self):
         print('Choisissez le contrôle du temps. '
@@ -110,6 +120,7 @@ class CreateTournament:
             else:
                 print('Choix invalide')
         return time_control
+
 
     def add_description(self):
         description = input('Entrez une description du tournoi : \n')

@@ -25,11 +25,10 @@ class Player:
         self.score = score
         self.payer_id = player_id
 
-    def __str__(self):
-        return f'{self.last_name} {self.first_name}'
 
     def __repr__(self):
-        return str(self)
+        return f'{self.last_name} {self.first_name}, classement : {self.ranking}'
+
 
     def serialized_player(self):
         player_informations = {}
@@ -60,6 +59,7 @@ class Player:
                       score,
                       player_id
                       )
+
 
     def add_to_database(self):
         player = Player(player_values[0],

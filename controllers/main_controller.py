@@ -1,58 +1,17 @@
 from controllers import player_controller
 from controllers import tournament_controller
+from controllers import tour_controller
 from views import player_view
 from views import tournament_view
+from views import tour_view
 from views import main_view
 from models import player_model
 from models import tournament_model
-
-
-"""class CreateMenus:
-    Create the main menu and all the navigation throughout the application
-
-    def __call__(self, menu_to_display):
-        Display the menu and ask the user where he wants to navigate to
-
-        for line in menu_to_display:
-            print(line[0] + ' : ' + line[1])
-
-        while(True):
-            choice = input('Entrez le chiffre correspondant à votre choix : ')
-            for line in menu_to_display:
-                if choice == line[0]:
-                    return str(line[0])
-            print('Choix non valide.')
+from models import tour_model
 
 
 class MainMenuController:
-
-    def __init__(self):
-        self.main_view = main_view.MainMenu()
-        self.create_menu = CreateMenus()
-        self.chosen_controller = None
-
-
-    def __call__(self):
-        choice = self.create_menu(self.main_view.main_menu)
-
-        if choice == '1':
-            self.chosen_controller = tournament_controller.CreateTournament()
-
-        if choice == '2':
-            pass
-
-        if choice == '3':
-            pass
-
-        if choice == '4':
-            self.chosen_controller = player_controller.CreatePlayer()
-
-        if choice == '5':
-            pass
-"""
-
-class MainMenuController:
-    """Main Controller for the aplication"""
+    """Main Controller for the application"""
     """
             Veuillez choisir une option :\n
             1: Créer un tournoi\n
@@ -64,10 +23,10 @@ class MainMenuController:
         """
     def __init__(self):
         self.view = main_view.MainMenu()
-        self.tournoi_ctrl = tournament_controller.TournamentController()
-        self.player_controller = player_controller.PlayerController()
-
-
+        self.player_controller = player_controller.PlayerController(self)
+        self.tour_controller = tour_controller.TourController(self)
+        self.tournoi_ctrl = tournament_controller.TournamentController(self, self.player_controller, tour_controller)
+        
     def run(self):
         option = self.view.display_home()
 
@@ -75,25 +34,15 @@ class MainMenuController:
             sys.exit()
         elif option == '1':
             self.tournoi_ctrl.create_tournament()
+            self.run()
         elif option == '2':
-            pass
+            self.tournoi_ctrl.start_tournament()
+            self.run()
         elif option == '3':
             pass
         elif option == '4':
             self.player_controller.run_display_player_menu()
+            self.run()
         elif option == '5':
-            pass
-
-"""
-class TournamentMenuController(MainMenuController):
-
-    def __init__(self):
-        super().__init__()
-        
-
-
-class PlayerMenuController(MainMenuController):
-
-    def __init__(self):
-        super().__init__()
-"""
+            self.player_controller.run_display_player_search_menu()
+            self.run()

@@ -3,6 +3,7 @@
 class MainMenu:
 
     def display_home(self):
+        """Display the main menu and ask the user to choose an option"""
         home_menu = '''
             Veuillez choisir une option :\n
             1: Créer un tournoi\n

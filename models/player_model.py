@@ -1,15 +1,12 @@
-#from tinydb import TinyDB
-
-
-#players_db= TinyDB('player_db.json')
 
 
 class Player:
     """Create an instance of a player"""
-    
-    def __init__(self):
+    def __init__(self, player_controller):
         self.PLAYERS_LIST = []
+        self.controller = player_controller
 
+        
     def __repr__(self):
         return f'{self.last_name} {self.first_name}, classement : {self.ranking}'
 
@@ -47,13 +44,21 @@ class Player:
 
     def add_player_id(self):
         player_id = len(self.PLAYERS_LIST) + 1
-
+        player_id = str(player_id)
+        
         return player_id
+
         
     def add_player_to_database(self, player):
         self.PLAYERS_LIST.append(player)
+
 
     def save_player(self, data):
         player = self.serialized_player(data)
         self.add_player_to_database(player)
         print(self.PLAYERS_LIST)
+
+
+    def send_players_list(self):
+
+        return self.PLAYERS_LIST

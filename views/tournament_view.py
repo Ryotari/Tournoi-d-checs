@@ -1,20 +1,7 @@
-from models import tournament_model
-from controllers import tournament_controller
-
-
-class TournamentDisplay:
-    """Display the upcoming tournament's details"""
-
-    def __call__(self):
-        tournaments_db = tournament_model.tournament_db
-
-        for tournament in tournaments_db:
-            if tournament['Tours'] == []:
-                print(f"Nom: {tournament['Nom du tournoi']} - \
-                		Lieu: {tournament['Lieu']}")
 
 
 class TournamentMenus:
+    """Display the tournament menus"""
     tournament_menu = """
                     Veuillez choisir une option :\n
                     1 : Afficher tous les tournois\n
@@ -22,6 +9,7 @@ class TournamentMenus:
                     0 : Retour au menu\n"""
 
     chosen_tournament_menu = """
+                            Veuillez choisir une option :\n
                             1 : Afficher les joueurs par ordre alphabétique\n
                             2 : Afficher les joueurs par classement\n
                             3 : Afficher les tours\n
@@ -30,35 +18,46 @@ class TournamentMenus:
 
 
 class TournamentView:
-    def __init__(self):
-        self.model = tournament_model.Tournament()
+    """Display the inputs to create a tournament"""
+    def __init__(self, tournament_controller):
+        self.controller = tournament_controller
         self.tournament_name = None
         self.location = None
         self.date = None
-        self.number_of_rounds = 4
+        self.number_of_tours = 4
         self.time_control = None
         self.description = None
         self.tournament_id = None
+        self.players_ids = []
+        self.players_entry = []
 
     def display_create_tournament(self):
         self.tournament_name = self.add_tournament_name()
         self.location = self.add_location()
         self.date = self.add_tournament_date()
-        self.number_of_rounds = self.add_number_of_rounds()
+        self.number_of_rounds = self.add_number_of_tours()
         self.time_control = self.add_time_control()
         self.description = self.add_description()
-        self.tournament_id = self.model.add_tournament_id()
+        self.tournament_id = self.controller.return_tournament_id()
+        self.players_entry = self.add_players_to_tournament()
         tournament_data = {
             'tournament_name': self.tournament_name,
             'location': self.location,
             'date': self.date,
-            'number_of_rounds': self.number_of_rounds,
+            'number_of_tours': self.number_of_tours,
             'time_control': self.time_control,
             'description': self.description,
-            'tournament_id': self.tournament_id
+            'tournament_id': self.tournament_id,
+            'players_entry': self.players_entry
         }
 
         return tournament_data
+
+
+    def display_all_tournaments(self):
+        TOURNAMENTS_LIST = self.controller.return_tournaments_list()
+        for tournament in TOURNAMENTS_LIST:
+            print(f"{tournament['tournament_id']} - {tournament['tournament_name']} - {tournament['location']}")
 
     def add_tournament_name(self):
         tournament_name = input('Nom du tournoi : ')
@@ -69,11 +68,11 @@ class TournamentView:
 
 
     def add_location(self):
-        tournament_location = input('Lieu du tournoi : ')
-        while tournament_location == '':
-            tournament_location = input('Lieu invalide. '
+        location = input('Lieu du tournoi : ')
+        while location == '':
+            location = input('Lieu invalide. '
                                         'Entrez le lieu du tournoi : ')
-        return tournament_location
+        return location
 
 
     def add_tournament_date(self):
@@ -111,24 +110,24 @@ class TournamentView:
         return date
 
 
-    def add_number_of_rounds(self):
-        number_of_rounds = 4
+    def add_number_of_tours(self):
+        number_of_tours = 4
         print('Le nombre de tours par défaut est de 4. \n'
               'Souhaitez vous changer ce nombre ?')
 
-        valid_rounds_number = False
-        while not valid_rounds_number:
-            round_choice = input("Entrez 'Y' pour changer, ou 'N' pour garder 4 : ")
-            if round_choice == 'Y':
-                number_of_rounds = input('Entrez le nombre de tours : ')
-                if number_of_rounds.isdigit():
-                    valid_rounds_number = True
+        valid_tours_number = False
+        while not valid_tours_number:
+            tour_choice = input("Entrez 'Y' pour changer, ou 'N' pour garder 4 : ")
+            if tour_choice == 'Y' or tour_choice == 'y':
+                number_of_tours = input('Entrez le nombre de tours : ')
+                if number_of_tours.isdigit():
+                    valid_tours_number = True
                 else:
                     print('Nombre de tours invalide. '
                           'Entrez le nombre de tours : ')
-            if round_choice == 'N':
-                valid_rounds_number = True
-        return number_of_rounds
+            if tour_choice == 'N' or tour_choice == 'n':
+                valid_tours_number = True
+        return number_of_tours
 
 
     def add_time_control(self):
@@ -157,3 +156,79 @@ class TournamentView:
     def add_description(self):
         description = input('Entrez une description du tournoi : \n')
         return description
+
+    def add_players_to_tournament(self):
+        PLAYERS_LIST = self.controller.return_all_players()
+
+        valid_add_player_choice = False
+        while not valid_add_player_choice:
+            add_player_choice = input("Voulez-vous ajouter un joueur ?\n"
+                                      "Appuyer sur 'Y' pour confirmer, ou 'N' pour ignorer : ")
+            if add_player_choice == 'Y' or add_player_choice == 'y':
+                valid_add_player_choice = True
+            elif add_player_choice == "N" or add_player_choice == 'n':
+                return self.players_entry
+            else:
+                print("Entrez sur 'Y' ou 'N'")
+
+
+        valid_id = False
+        while not valid_id:
+            print(f'Liste de joueurs : \n{PLAYERS_LIST}\n\n')
+            print('Joueurs dans le tournoi : \n')
+            for player in self.players_entry:
+                print(f"{player['player_id']} - {player['last_name']} {player['first_name']}")
+            id_choice = input('Entrez l\'id du joueur à ajouter : \n')
+            try:
+                int(id_choice)
+            except Exception:
+                print('Vous devez entrer l\'id du joueur')
+            else:
+                valid_id = True
+        id_choice = int(id_choice)
+        
+        if id_choice <= 0 or id_choice > len(PLAYERS_LIST):
+            print('id de joueur non reconnu')
+            self.add_players_to_tournament()
+
+        if id_choice in self.players_ids:
+            print('Ce joueur participe déjà au tournoi')
+            self.add_players_to_tournament()
+
+        self.players_ids.append(id_choice)
+
+
+        id_choice = str(id_choice)
+        player = next(item for item in PLAYERS_LIST if item['player_id'] == id_choice)
+        print(player)
+        self.players_entry.append(player)
+        print(f'Le joueur avec l\'id {id_choice} a été ajouté au tournoi')
+        self.add_players_to_tournament()
+
+
+    def select_tournament(self):
+        TOURNAMENTS_LIST = self.controller.return_tournaments_list()
+
+        for tournament in TOURNAMENTS_LIST:
+            print(f"{tournament['tournament_id']} - {tournament['tournament_name']} - {tournament['date']}")
+
+        valid_id = False
+        while not valid_id:
+            id_choice = input('Entrez l\'id du tournoi choisi : ')
+
+            try:
+                int(id_choice)
+            except Exception:
+                print('Vous devez entrer l\'id du tournoi')
+            else:
+                valid_id = True
+        id_choice = int(id_choice)
+
+        if id_choice <= 0 or id_choice > len(TOURNAMENTS_LIST):
+            print('id de tournoi non reconnu')
+            self.select_tournament()
+
+        tournament = next(item for item in TOURNAMENTS_LIST if item['tournament_id'] == id_choice)
+        print(tournament)
+
+        return tournament

@@ -1,7 +1,7 @@
-"""from tinydb import TinyDB
+from tinydb import TinyDB
 
 
-tournament_database = TinyDB('tournament_db.json')"""
+tournament_database = TinyDB('models/tournament.json')
 
 
 class Tournament:
@@ -9,10 +9,7 @@ class Tournament:
 
     def __init__(self, tournament_controller):
         self.controller = tournament_controller
-        self.TOURNAMENTS_LIST = []
 
-    def __repr__(self):
-        return f"{self.tournament_name} - {self.location}\n"
 
     def serialized_tournament(self, tournament):
         tournament_data = {
@@ -23,47 +20,45 @@ class Tournament:
             'time_control': tournament['time_control'],
             'description': tournament['description'],
             'tournament_id': tournament['tournament_id'],
-            'players_entry': tournament['players_entry']
+            'players_ids': tournament['players_ids'],
+            'player_scores': tournament['player_scores'],
+            'list_of_tours': tournament['list_of_tours']
         }
 
         return tournament_data
 
     def unserialized_tournament(self, serialized_tournament):
-        tournament_name = serialized_tournament['tournament_name']
-        location = serialized_tournament['location']
-        date = serialized_tournament['date']
-        number_of_tours = serialized_tournament['number_of_tours']
-        time_control = serialized_tournament['time_control']
-        description = serialized_tournament['description']
-        tournament_id = serialized_tournament['tournament_id']
-        players_entry = serialized_tournament['players_entry']
+        tournament_data = {
+            'tournament_name': serialized_tournament['tournament_name'],
+            'location': serialized_tournament['location'],
+            'date': serialized_tournament['date'],
+            'number_of_tours': serialized_tournament['number_of_tours'],
+            'time_control': serialized_tournament['time_control'],
+            'description': serialized_tournament['description'],
+            'tournament_id': serialized_tournament['tournament_id'],
+            'players_ids': serialized_tournament['players_ids'],
+            'player_scores': serialized_tournament['player_scores'],
+            'list_of_tours': serialized_tournament['list_of_tours']
+        }
+        return tournament_data
 
-        return Tournament(tournament_name,
-                          location,
-                          date,
-                          number_of_tours,
-                          time_control,
-                          description,
-                          tournament_id,
-                          players_entry
-                          )
+
 
     def add_tournament_id(self):
-        tournament_id = len(self.TOURNAMENTS_LIST) + 1
+        tournament_id = len(tournament_database) + 1
 
         return tournament_id
 
     def add_tournament_to_database(self, tournament):
-        self.TOURNAMENTS_LIST.append(tournament)
+        tournament_database.insert(tournament)
 
 
     def save_tournament(self, data):
         """Save the tournament and add it to the database"""
         tournament = self.serialized_tournament(data)
         self.add_tournament_to_database(tournament)
-        print(self.TOURNAMENTS_LIST)
+        print('Le tournoi a été ajouté à la base de données.\n')
 
-    def send_tournaments_list(self):
-        TOURNAMENTS_LIST = self.TOURNAMENTS_LIST
+    def send_tournament_database(self):
         
-        return TOURNAMENTS_LIST
+        return tournament_database

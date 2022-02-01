@@ -17,7 +17,7 @@ class PlayerController:
    
     def get_all_players(self):
 
-        return self.model.send_players_list()
+        return self.model.send_player_database()
 
     
     def return_player_id(self):
@@ -39,7 +39,14 @@ class PlayerController:
         if option == '0':
             return
         elif option == '1':
-            self.view.display_players_by_name()
+            player_database = self.view.display_players_by(sort_key = 'last_name')
+            if player_database == None:
+                print('Aucun joueur ne se trouve dans la base de données.')
+            else:
+                self.view.display_chosen_player()
         elif option == '2':
-            self.view.display_players_by_rank()
-
+            player_database = self.view.display_players_by(sort_key = 'ranking')
+            if player_database == None:
+                print('Aucun joueur ne se trouve dans la base de données.')
+            else:
+                self.view.display_chosen_player()

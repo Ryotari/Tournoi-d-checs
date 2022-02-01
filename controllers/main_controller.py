@@ -1,3 +1,4 @@
+import sys
 from controllers import player_controller
 from controllers import tournament_controller
 from controllers import tour_controller
@@ -24,25 +25,22 @@ class MainMenuController:
     def __init__(self):
         self.view = main_view.MainMenu()
         self.player_controller = player_controller.PlayerController(self)
-        self.tour_controller = tour_controller.TourController(self)
-        self.tournoi_ctrl = tournament_controller.TournamentController(self, self.player_controller, tour_controller)
+        self.tour_controller = tour_controller.TourController(self, self.player_controller)
+        self.tournament_controller = tournament_controller.TournamentController(self, self.player_controller, self.tour_controller)
         
     def run(self):
-        option = self.view.display_home()
+        while(True):
+            option = self.view.display_home()
 
-        if option == '0':
-            sys.exit()
-        elif option == '1':
-            self.tournoi_ctrl.create_tournament()
-            self.run()
-        elif option == '2':
-            self.tournoi_ctrl.start_tournament()
-            self.run()
-        elif option == '3':
-            pass
-        elif option == '4':
-            self.player_controller.run_display_player_menu()
-            self.run()
-        elif option == '5':
-            self.player_controller.run_display_player_search_menu()
-            self.run()
+            if option == '0':
+                sys.exit()
+            elif option == '1':
+                self.tournament_controller.create_tournament()
+            elif option == '2':
+                self.tournament_controller.load_tournament()
+            elif option == '3':
+                self.tournament_controller.run_tournament_search()
+            elif option == '4':
+                self.player_controller.run_display_player_menu()
+            elif option == '5':
+                self.player_controller.run_display_player_search_menu()

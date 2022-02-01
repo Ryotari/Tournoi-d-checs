@@ -2,11 +2,6 @@
 
 class TournamentMenus:
     """Display the tournament menus"""
-    tournament_menu = """
-                    Veuillez choisir une option :\n
-                    1 : Afficher tous les tournois\n
-                    2 : Choisir un tournoi\n
-                    0 : Retour au menu\n"""
 
     chosen_tournament_menu = """
                             Veuillez choisir une option :\n
@@ -19,6 +14,8 @@ class TournamentMenus:
 
 class TournamentView:
     """Display the inputs to create a tournament"""
+
+
     def __init__(self, tournament_controller):
         self.controller = tournament_controller
         self.tournament_name = None
@@ -29,7 +26,10 @@ class TournamentView:
         self.description = None
         self.tournament_id = None
         self.players_ids = []
-        self.players_entry = []
+        self.player_scores = {}
+        self.list_of_tours = []
+        # self.player_scores = {player_id:0 for player_id in self.players_ids}
+
 
     def display_create_tournament(self):
         self.tournament_name = self.add_tournament_name()
@@ -39,7 +39,9 @@ class TournamentView:
         self.time_control = self.add_time_control()
         self.description = self.add_description()
         self.tournament_id = self.controller.return_tournament_id()
-        self.players_entry = self.add_players_to_tournament()
+        self.add_players_to_tournament()
+        self.player_scores = {player_id:0 for player_id in self.players_ids}
+        self.list_of_tours = []
         tournament_data = {
             'tournament_name': self.tournament_name,
             'location': self.location,
@@ -48,22 +50,47 @@ class TournamentView:
             'time_control': self.time_control,
             'description': self.description,
             'tournament_id': self.tournament_id,
-            'players_entry': self.players_entry
+            'players_ids': self.players_ids,
+            'player_scores': self.player_scores,
+            'list_of_tours': self.list_of_tours
         }
 
         return tournament_data
 
 
     def display_all_tournaments(self):
-        TOURNAMENTS_LIST = self.controller.return_tournaments_list()
-        for tournament in TOURNAMENTS_LIST:
+        tournament_database = self.controller.get_all_tournaments()
+        for tournament in tournament_database:
             print(f"{tournament['tournament_id']} - {tournament['tournament_name']} - {tournament['location']}")
+
+        return tournament_database
+
+
+    def display_chosen_tournament(self):
+        tournament_database = self.controller.get_all_tournaments()
+
+        message = "Choisissez l'id d'un tournoi : "
+        
+        id_choice = input(message)
+
+        while not id_choice.isdigit() and id_choice not in range(0, len(tournament_database)):
+            id_choice = input(text)
+
+        id_choice = int(id_choice)
+        tournament = tournament_database.get(doc_id=id_choice)
+        for key in tournament:
+            print(key, ' : ', tournament[key])
+
+        print()
+        input('Appuyez sur une touche pour revenir au menu.')
+
 
     def add_tournament_name(self):
         tournament_name = input('Nom du tournoi : ')
         while tournament_name == '':
             tournament_name = input('Nom invalide. '
                                     'Entrez le nom du tournoi : ')
+
         return tournament_name
 
 
@@ -71,7 +98,7 @@ class TournamentView:
         location = input('Lieu du tournoi : ')
         while location == '':
             location = input('Lieu invalide. '
-                                        'Entrez le lieu du tournoi : ')
+                             'Entrez le lieu du tournoi : ')
         return location
 
 
@@ -127,6 +154,7 @@ class TournamentView:
                           'Entrez le nombre de tours : ')
             if tour_choice == 'N' or tour_choice == 'n':
                 valid_tours_number = True
+
         return number_of_tours
 
 
@@ -150,85 +178,90 @@ class TournamentView:
                 valid_time_control = True
             else:
                 print('Choix invalide')
+
         return time_control
 
 
     def add_description(self):
-        description = input('Entrez une description du tournoi : \n')
+        description = input('Entrez une description du tournoi : ')
+
         return description
 
-    def add_players_to_tournament(self):
-        PLAYERS_LIST = self.controller.return_all_players()
 
-        valid_add_player_choice = False
-        while not valid_add_player_choice:
+
+    def add_players_to_tournament(self):
+        
+        while(True):
             add_player_choice = input("Voulez-vous ajouter un joueur ?\n"
                                       "Appuyer sur 'Y' pour confirmer, ou 'N' pour ignorer : ")
-            if add_player_choice == 'Y' or add_player_choice == 'y':
-                valid_add_player_choice = True
-            elif add_player_choice == "N" or add_player_choice == 'n':
-                return self.players_entry
-            else:
-                print("Entrez sur 'Y' ou 'N'")
 
+            if add_player_choice.upper() == 'Y':
+                self.add_player_to_tournament()
+            elif add_player_choice.upper() == 'N':
+                return
+            else:
+                print('Commande non reconnue')
+
+
+    def add_player_to_tournament(self):
+        player_database = self.controller.return_all_players()
 
         valid_id = False
         while not valid_id:
-            print(f'Liste de joueurs : \n{PLAYERS_LIST}\n\n')
-            print('Joueurs dans le tournoi : \n')
-            for player in self.players_entry:
+            print('Liste de joueurs : ')
+            for player in player_database:
                 print(f"{player['player_id']} - {player['last_name']} {player['first_name']}")
-            id_choice = input('Entrez l\'id du joueur à ajouter : \n')
+            print('Joueurs dans le tournoi : \n')
+            for player_id in self.players_ids:
+                player = player_database.get(doc_id=player_id)
+                print(f"{player['player_id']} - {player['last_name']} {player['first_name']}")
+            print()
+            id_choice = input("Entrez l'id du joueur à ajouter : \n")
             try:
                 int(id_choice)
             except Exception:
-                print('Vous devez entrer l\'id du joueur')
+                print("Vous devez entrer l'id du joueur\n")
             else:
                 valid_id = True
         id_choice = int(id_choice)
         
-        if id_choice <= 0 or id_choice > len(PLAYERS_LIST):
-            print('id de joueur non reconnu')
-            self.add_players_to_tournament()
+        if id_choice <= 0 or id_choice > len(player_database):
+            print('id de joueur non reconnu\n')
 
-        if id_choice in self.players_ids:
-            print('Ce joueur participe déjà au tournoi')
-            self.add_players_to_tournament()
+        elif id_choice in self.players_ids:
+            print('Ce joueur participe déjà au tournoi\n')
 
-        self.players_ids.append(id_choice)
-
-
-        id_choice = str(id_choice)
-        player = next(item for item in PLAYERS_LIST if item['player_id'] == id_choice)
-        print(player)
-        self.players_entry.append(player)
-        print(f'Le joueur avec l\'id {id_choice} a été ajouté au tournoi')
-        self.add_players_to_tournament()
+        else:
+            self.players_ids.append(id_choice)
+            print(f"Le joueur avec l'id {id_choice} a été ajouté au tournoi\n\n")
 
 
     def select_tournament(self):
-        TOURNAMENTS_LIST = self.controller.return_tournaments_list()
+        tournament_database = self.controller.get_all_tournaments()
+        tournaments_in_progress = []
+        for tournament in tournament_database:
+            if len(self.list_of_tours) < int(self.number_of_tours):
+                tournaments_in_progress.append(tournament)
 
-        for tournament in TOURNAMENTS_LIST:
-            print(f"{tournament['tournament_id']} - {tournament['tournament_name']} - {tournament['date']}")
+        for tournament in tournaments_in_progress:
+            print(f"{tournament['tournament_id']} - {tournament['tournament_name']} - {tournament['location']}")
 
-        valid_id = False
-        while not valid_id:
-            id_choice = input('Entrez l\'id du tournoi choisi : ')
+        if len(tournaments_in_progress) == 0:
+            print('Aucun tournoi en cours.')
+            return None
 
-            try:
-                int(id_choice)
-            except Exception:
-                print('Vous devez entrer l\'id du tournoi')
-            else:
-                valid_id = True
+        message = "Entrez l'id du tournoi choisi : "
+        id_choice = input(message)
+
+        while not id_choice.isdigit() and id_choice not in tournaments_in_progress:
+            print('id de tournoi non valide.\n')
+            id_choice = input("Entrez l'id du tournoi choisi : ")
+
         id_choice = int(id_choice)
 
-        if id_choice <= 0 or id_choice > len(TOURNAMENTS_LIST):
-            print('id de tournoi non reconnu')
-            self.select_tournament()
-
-        tournament = next(item for item in TOURNAMENTS_LIST if item['tournament_id'] == id_choice)
-        print(tournament)
-
+        tournament = tournament_database.get(doc_id=id_choice)
+        print('Tournoi choisi : \n')
+        for key in tournament:
+            print(key, ' : ', tournament[key])
+        print()
         return tournament

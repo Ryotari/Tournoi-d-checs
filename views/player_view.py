@@ -18,7 +18,6 @@ class PlayerView:
         self.birthdate = None
         self.gender = None
         self.ranking = None
-        self.score = 0
         self.player_id = None
 
 
@@ -51,43 +50,45 @@ class PlayerView:
 
 
     def display_all_players(self):
-        PLAYERS_LIST = self.controller.get_all_players()
+        player_database = self.controller.get_all_players()
+        for player in player_database:
+            print(f"ID : {player['player_id']} - {player['last_name']} {player['first_name']}")
+
+
+    def display_players_by(self, sort_key = 'ranking'):
+        assert (sort_key in ['ranking', 'last_name'])
+
+        player_database = self.controller.get_all_players()
+        PLAYERS_LIST = sorted(player_database, key=lambda d: d[sort_key])
         for player in PLAYERS_LIST:
-            print(f"{player['player_id']} - {player['last_name']} {player['first_name']}")
-
-    def display_players_by_name(self):
-        PLAYERS_LIST = self.controller.get_all_players()
-        PLAYERS_LIST_BY_NAME = sorted(PLAYERS_LIST, key=lambda d: d['last_name'])
-        for player in PLAYERS_LIST_BY_NAME:
             print(f"ID : {player['player_id']} - {player['last_name']} {player['first_name']} - Rank : {player['ranking']}")
 
+        return player_database
 
-    def display_players_by_rank(self):
-        PLAYERS_LIST = self.controller.get_all_players()
-        PLAYERS_LIST_BY_RANK = sorted(PLAYERS_LIST, key=lambda d: d['ranking'])
-        for player in PLAYERS_LIST_BY_RANK:
-            print(f"ID : {player['player_id']} - {player['last_name']} {player['first_name']} - Rank : {player['ranking']}")
+    def display_player_by_id(self, player_id):
+        player_database = self.controller.get_all_players()
+        lenght = len(player_database) + 1
+        assert(str(player_id).isdigit() and player_id in range(0, lenght))
+        player = player_database.get(doc_id=player_id)
+        for key in player:
+            print(key, ' : ', player[key])
 
 
-    """
     def display_chosen_player(self):
-        PLAYERS_LIST = self.controller.get_all_players()
-        valid_id = False
-        while not valid_id:
-            id_choice = input('Entrez l\'id du joueur que vous recherchez : ')
-            try:
-                int(id_choice)
-            except Exception:
-                print('Vous devez entrer l\'id du joueur')
-            else:
-                valid_id = True
-            id_choice = int(id_choice)
-        if id_choice <= 0 or id_choice > len(PLAYERS_LIST):
-            print('id de joueur non reconnu')
-            self.display_chosen_player()
-        player = next(item for item in PLAYERS_LIST if item['player_id'] == id_choice)
-        print(player)
-        """
+        player_database = self.controller.get_all_players()
+
+        text = "Choisissez l'id d'un joueur : "
+
+        id_choice = input(text)
+
+        while not id_choice.isdigit() and id_choice not in range(0, len(player_database)):
+            id_choice = input(text)
+
+        id_choice = int(id_choice)
+        self.display_player_by_id(id_choice)
+        #player = player_database.get(User.player_id == id_choice)
+        input('Appuyez sur une touche pour revenir au menu.')
+        
 
 
     def display_create_player(self):
@@ -103,7 +104,6 @@ class PlayerView:
             'birthdate': self.birthdate,
             'gender': self.gender,
             'ranking': self.ranking,
-            'score': self.score,
             'player_id': self.player_id
         }
 

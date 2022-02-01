@@ -1,14 +1,13 @@
+from tinydb import TinyDB
 
+
+player_database = TinyDB('models/players.json')
 
 class Player:
     """Create an instance of a player"""
     def __init__(self, player_controller):
-        self.PLAYERS_LIST = []
         self.controller = player_controller
 
-        
-    def __repr__(self):
-        return f'{self.last_name} {self.first_name}, classement : {self.ranking}'
 
     def serialized_player(self, player):
         player_data = {
@@ -17,7 +16,6 @@ class Player:
             'birthdate': player['birthdate'],
             'gender': player['gender'],
             'ranking': player['ranking'],
-            'score': player['score'],
             'player_id': player['player_id']
         }
 
@@ -30,7 +28,6 @@ class Player:
         birthdate = serialized_player['birthdate']
         gender = serialized_player['gender']
         ranking = serialized_player['ranking']
-        score = serialized_player['score']
         player_id = serialized_player['player_id']
         
         return Player(last_name,
@@ -38,27 +35,24 @@ class Player:
                       birthdate,
                       gender,
                       ranking,
-                      score,
                       player_id
                       )
 
     def add_player_id(self):
-        player_id = len(self.PLAYERS_LIST) + 1
-        player_id = str(player_id)
+        player_id = len(player_database) + 1
         
         return player_id
 
         
     def add_player_to_database(self, player):
-        self.PLAYERS_LIST.append(player)
+        player_database.insert(player)
 
 
     def save_player(self, data):
         player = self.serialized_player(data)
         self.add_player_to_database(player)
-        print(self.PLAYERS_LIST)
+        print('Le joueur a été ajouté à la base de données.\n')
 
+    def send_player_database(self):
 
-    def send_players_list(self):
-
-        return self.PLAYERS_LIST
+        return player_database

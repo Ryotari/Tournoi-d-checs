@@ -145,14 +145,14 @@ class TournamentView:
         valid_tours_number = False
         while not valid_tours_number:
             tour_choice = input("Entrez 'Y' pour changer, ou 'N' pour garder 4 : ")
-            if tour_choice == 'Y' or tour_choice == 'y':
+            if tour_choice.upper() == 'Y':
                 number_of_tours = input('Entrez le nombre de tours : ')
                 if number_of_tours.isdigit():
                     valid_tours_number = True
                 else:
                     print('Nombre de tours invalide. '
                           'Entrez le nombre de tours : ')
-            if tour_choice == 'N' or tour_choice == 'n':
+            if tour_choice.upper() == 'N':
                 valid_tours_number = True
 
         return number_of_tours

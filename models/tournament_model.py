@@ -52,6 +52,9 @@ class Tournament:
     def add_tournament_to_database(self, tournament):
         tournament_database.insert(tournament)
 
+    def update_tournament(self, tournament):
+        tournament_database.update({'list_of_tours': tournament['list_of_tours']}, doc_ids=[tournament['tournament_id']])
+        tournament_database.update({'player_scores': tournament['player_scores']}, doc_ids=[tournament['tournament_id']])
 
     def save_tournament(self, data):
         """Save the tournament and add it to the database"""

@@ -52,9 +52,17 @@ class TournamentController:
         tournament = self.model.unserialized_tournament(tournament)
 
         if len(tournament['list_of_tours']) == 0:
-            self.tour_controller.run_tour_one(tournament)
+            tournament = self.tour_controller.run_tour_one(tournament)
+            self.save_tour(tournament)
+
             while len(tournament['list_of_tours']) < tournament['number_of_tours']:
-                self.tour_controller.run_other_tours(tournament)
+                tournament = self.tour_controller.run_other_tours(tournament)
+                self.save_tour(tournament)
         else:
             while len(tournament['list_of_tours']) < tournament['number_of_tours']:
-                self.tour_controller.run_other_tours(tournament)
+                tournament = self.tour_controller.run_other_tours(tournament)
+                self.save_tour(tournament)
+
+
+    def save_tour(self, tournament):
+        self.model.update_tournament(tournament)

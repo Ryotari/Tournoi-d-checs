@@ -13,11 +13,13 @@ class TourController:
 
 
     def run_tour_one(self, tournament):
-        self.view.display_run_tour_one(tournament)
+        return self.view.display_run_tour_one(tournament)
 
     def run_other_tours(self, tournament):
-        self.view.display_run_other_tours(tournament)
+        return self.view.display_run_other_tours(tournament)
 
     def get_player_database(self):
 
         return self.player_controller.get_all_players()
+
+    

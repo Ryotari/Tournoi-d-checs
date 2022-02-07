@@ -9,21 +9,30 @@ class TourView:
         self.end_time = None
         self.list_of_matchs = []
         self.list_of_finished_matchs = []
+        self.list_of_tours = []
 
 
     def display_run_tour_one(self, tournament):
         self.sort_players_by_ranking(tournament)
         self.begin_time = self.display_begin_time()
-        self.display_tour()
+        self.tour_name = self.display_tour(tournament)
         self.display_entry_scores(tournament)
         self.end_time = self.display_end_time()
+        self.list_of_tours.append(self.list_of_finished_matchs)
+        tournament['list_of_tours'] = self.list_of_tours
+
+        return tournament
 
     def display_run_other_tours(self, tournament):
         self.sort_players_by_score(tournament)
         self.begin_time = self.display_begin_time()
-        self.display_tour()
+        self.display_tour(tournament)
         self.display_entry_scores(tournament)
         self.end_time = self.display_end_time()
+        self.list_of_tours.append(self.list_of_finished_matchs)
+        tournament['list_of_tours'] = self.list_of_tours
+
+        return tournament
 
 
     def display_begin_time(self):
@@ -69,10 +78,14 @@ class TourView:
 
     def sort_players_by_score(self, tournament):
         self.list_of_matchs.clear()
+        self.list_of_finished_matchs.clear()
         player_instances = tournament['player_scores']
-
+        """sorted_players = sorted(player_instances.items(), key=lambda d:d[1], reverse=True)
+        print(sorted_players)"""
         sorted_players = list({player_id: player_score for player_id, player_score in sorted(player_instances.items(), key=lambda item: item[1], reverse = True)})
-        
+
+
+
         MATCH_NUMBER = 1
         while sorted_players != []:
             match_name = 'Match' + str(MATCH_NUMBER)
@@ -84,13 +97,15 @@ class TourView:
             self.list_of_matchs.append(match_instance)
 
 
-    def display_tour(self):
+    def display_tour(self, tournament):
         list_of_matchs = self.list_of_matchs
-        self.tour_name = "Tour" + str(len(self.list_of_tours) + 1)
-        print(f'{self.tour_name} :')
+        tour_name = "Tour" + str(len(tournament['list_of_tours']) + 1)
+        print(f'{tour_name} :')
         print()
         for match in list_of_matchs:
             print(f'{match[0]} : {match[1]} vs {match[2]}')
+
+        return tour_name
 
     def display_entry_scores(self, tournament):
         list_of_matchs = self.list_of_matchs

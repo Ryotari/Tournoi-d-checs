@@ -49,6 +49,24 @@ class PlayerView:
         return option
 
 
+    def update_ranking(self):
+        player_database = self.controller.get_all_players()
+        if len(player_database) == 0:
+            print('Aucun joueur dans la base de données')
+        else:
+            self.display_all_players()
+            id_choice = self.display_chose_player()
+            message = 'Entrez le nouveau classement du joueur : '
+
+            new_ranking = input(message)
+            while not new_ranking.isdigit() or not int(new_ranking) >= 1:
+                print('Classement non valide.\n')
+                new_ranking = input(message)
+            new_ranking = int(new_ranking)
+
+            player_database.update({'ranking': new_ranking}, doc_ids=[id_choice])
+
+
     def display_all_players(self):
         player_database = self.controller.get_all_players()
         for player in player_database:
@@ -74,22 +92,26 @@ class PlayerView:
             print(key, ' : ', player[key])
 
 
-    def display_chosen_player(self):
+    def display_chose_player(self):
         player_database = self.controller.get_all_players()
 
         text = "Choisissez l'id d'un joueur : "
 
         id_choice = input(text)
-
-        while not id_choice.isdigit() and id_choice not in range(0, len(player_database)):
+        while not id_choice.isdigit() or int(id_choice) not in range(1, (len(player_database) + 1)):
+            print('id non valide.\n')
             id_choice = input(text)
 
         id_choice = int(id_choice)
+
+        return id_choice
+
+
+    def display_chosen_player(self):
+        id_choice = self.display_chose_player()
         self.display_player_by_id(id_choice)
-        #player = player_database.get(User.player_id == id_choice)
         input('Appuyez sur une touche pour revenir au menu.')
         
-
 
     def display_create_player(self):
         self.last_name = self.add_last_name()
@@ -169,7 +191,8 @@ class PlayerView:
     def add_ranking(self):
         ranking = input('Entrez le classement du joueur : ')
         while(True):
-            if ranking.isdigit() and int(ranking) >= 0:
+            if ranking.isdigit() and int(ranking) > 0:
+                ranking = int(ranking)
                 return ranking
             else:
                 ranking = input('Classement invalide. '

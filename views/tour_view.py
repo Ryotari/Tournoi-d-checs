@@ -9,7 +9,6 @@ class TourView:
         self.end_time = None
         self.list_of_matchs = []
         self.list_of_finished_matchs = []
-        self.list_of_tours = []
 
 
     def display_run_tour_one(self, tournament):
@@ -18,8 +17,7 @@ class TourView:
         self.tour_name = self.display_tour(tournament)
         self.display_entry_scores(tournament)
         self.end_time = self.display_end_time()
-        self.list_of_tours.append(self.list_of_finished_matchs)
-        tournament['list_of_tours'] = self.list_of_tours
+        tournament['list_of_tours'].append(self.list_of_finished_matchs)
 
         return tournament
 
@@ -29,8 +27,7 @@ class TourView:
         self.display_tour(tournament)
         self.display_entry_scores(tournament)
         self.end_time = self.display_end_time()
-        self.list_of_tours.append(self.list_of_finished_matchs)
-        tournament['list_of_tours'] = self.list_of_tours
+        tournament['list_of_tours'].append(self.list_of_finished_matchs)
 
         return tournament
 
@@ -88,7 +85,7 @@ class TourView:
 
         MATCH_NUMBER = 1
         while sorted_players != []:
-            match_name = 'Match' + str(MATCH_NUMBER)
+            match_name = 'Match ' + str(MATCH_NUMBER)
             player_1 = sorted_players[0]
             player_2 = sorted_players[1]
             del sorted_players[0:2]
@@ -99,7 +96,7 @@ class TourView:
 
     def display_tour(self, tournament):
         list_of_matchs = self.list_of_matchs
-        tour_name = "Tour" + str(len(tournament['list_of_tours']) + 1)
+        tour_name = "Tour " + str(len(tournament['list_of_tours']) + 1)
         print(f'{tour_name} :')
         print()
         for match in list_of_matchs:

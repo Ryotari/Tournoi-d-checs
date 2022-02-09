@@ -73,8 +73,9 @@ class TournamentView:
         
         id_choice = input(message)
 
-        while not id_choice.isdigit() and id_choice not in range(0, len(tournament_database)):
-            id_choice = input(text)
+        while not id_choice.isdigit() or int(id_choice) not in range(1, (len(tournament_database) + 1)):
+            print('id non valide.\n')
+            id_choice = input(message)
 
         id_choice = int(id_choice)
         tournament = tournament_database.get(doc_id=id_choice)
@@ -239,11 +240,13 @@ class TournamentView:
     def select_tournament(self):
         tournament_database = self.controller.get_all_tournaments()
         tournaments_in_progress = []
+        tournaments_in_progress_id = []
         for tournament in tournament_database:
-            if len(self.list_of_tours) < int(self.number_of_tours):
+            if len(tournament['list_of_tours']) < int(tournament['number_of_tours']):
                 tournaments_in_progress.append(tournament)
 
         for tournament in tournaments_in_progress:
+            tournaments_in_progress_id.append(tournament['tournament_id'])
             print(f"{tournament['tournament_id']} - {tournament['tournament_name']} - {tournament['location']}")
 
         if len(tournaments_in_progress) == 0:
@@ -253,7 +256,7 @@ class TournamentView:
         message = "Entrez l'id du tournoi choisi : "
         id_choice = input(message)
 
-        while not id_choice.isdigit() and id_choice not in tournaments_in_progress:
+        while not id_choice.isdigit() or int(id_choice) not in tournaments_in_progress_id:
             print('id de tournoi non valide.\n')
             id_choice = input("Entrez l'id du tournoi choisi : ")
 

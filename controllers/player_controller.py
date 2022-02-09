@@ -32,7 +32,7 @@ class PlayerController:
         elif option == '1':
             self.create_player()
         elif option == '2':
-            pass
+            self.view.update_ranking()
 
     def run_display_player_search_menu(self):
         option = self.view.display_player_search_menu()
@@ -40,13 +40,13 @@ class PlayerController:
             return
         elif option == '1':
             player_database = self.view.display_players_by(sort_key = 'last_name')
-            if player_database == None:
+            if len(player_database) == 0:
                 print('Aucun joueur ne se trouve dans la base de données.')
             else:
                 self.view.display_chosen_player()
         elif option == '2':
             player_database = self.view.display_players_by(sort_key = 'ranking')
-            if player_database == None:
+            if len(player_database) == 0:
                 print('Aucun joueur ne se trouve dans la base de données.')
             else:
                 self.view.display_chosen_player()

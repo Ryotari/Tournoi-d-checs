@@ -24,7 +24,7 @@ class TournamentController:
 
     def run_tournament_search(self):
         tournament_database = self.view.display_all_tournaments()
-        if tournament_database == None:
+        if len(tournament_database) == 0:
             print('Aucun tournoi ne se trouve dans la base de données.')
         else:
             self.view.display_chosen_tournament()

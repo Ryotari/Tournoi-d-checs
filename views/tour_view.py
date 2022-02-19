@@ -74,6 +74,7 @@ class TourView:
 
 
     def sort_players_by_score(self, tournament):
+        player_database = self.controller.get_player_database()
         self.list_of_matchs.clear()
         self.list_of_finished_matchs.clear()
         player_instances = tournament['player_scores']
@@ -81,7 +82,22 @@ class TourView:
         print(sorted_players)"""
         sorted_players = list({player_id: player_score for player_id, player_score in sorted(player_instances.items(), key=lambda item: item[1], reverse = True)})
 
+        NB_MATCHS = len(sorted_players)
+        player_1 = None
+        player_2 = None
 
+        for i in range(NB_MATCHS-1):
+            if i < NB_MATCHS:
+                player_1 = sorted_players[i]
+                player_2 = sorted_players[i+1]
+                player_1_instance = player_database.get(doc_id=int(player_1))
+                player_2_instance = player_database.get(doc_id=int(player_2))
+                print(player_1_instance)
+
+                if player_instances[str(i+1)] == player_instances[str(i+2)]:
+                    if player_1_instance['ranking'] > player_2_instance['ranking']:
+                        sorted_players[i] = player_2
+                        sorted_players[i+1] = player_1
 
         MATCH_NUMBER = 1
         while sorted_players != []:
@@ -89,6 +105,7 @@ class TourView:
             player_1 = sorted_players[0]
             player_2 = sorted_players[1]
             del sorted_players[0:2]
+            print(sorted_players)
             match_instance = (match_name, player_1, player_2)
             MATCH_NUMBER += 1
             self.list_of_matchs.append(match_instance)

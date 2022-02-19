@@ -1,14 +1,3 @@
-
-
-class PlayerDisplay:
-
-    def __call__(self):
-        """player_db = player_model.player_db"""
-
-        for player in player_list:
-            print(f"{player['Nom']} {player['Prénom']} {player['Classement']}")
-
-
 class PlayerView:
 
     def __init__(self, player_controller):
@@ -19,7 +8,6 @@ class PlayerView:
         self.gender = None
         self.ranking = None
         self.player_id = None
-
 
     def display_player_menu(self):
         player_menu = """
@@ -34,7 +22,6 @@ class PlayerView:
 
         return option
 
-
     def display_player_search_menu(self):
         player_search_menu = """
                 1 : Chercher par ordre alphabétique\n
@@ -44,10 +31,9 @@ class PlayerView:
         option = input(player_search_menu)
 
         while option not in ['0', '1', '2']:
-            option = input(player_menu)
+            option = input(player_search_menu)
 
         return option
-
 
     def update_ranking(self):
         player_database = self.controller.get_all_players()
@@ -64,22 +50,23 @@ class PlayerView:
                 new_ranking = input(message)
             new_ranking = int(new_ranking)
 
-            player_database.update({'ranking': new_ranking}, doc_ids=[id_choice])
-
+            player_database.update({'ranking': new_ranking},
+                                   doc_ids=[id_choice])
 
     def display_all_players(self):
         player_database = self.controller.get_all_players()
         for player in player_database:
-            print(f"ID : {player['player_id']} - {player['last_name']} {player['first_name']}")
+            print(f"ID : {player['player_id']} - \
+                {player['last_name']} {player['first_name']}")
 
-
-    def display_players_by(self, sort_key = 'ranking'):
+    def display_players_by(self, sort_key='ranking'):
         assert (sort_key in ['ranking', 'last_name'])
 
         player_database = self.controller.get_all_players()
         PLAYERS_LIST = sorted(player_database, key=lambda d: d[sort_key])
         for player in PLAYERS_LIST:
-            print(f"ID : {player['player_id']} - {player['last_name']} {player['first_name']} - Rank : {player['ranking']}")
+            print(f"ID : {player['player_id']} - {player['last_name']} {player['first_name']} \
+                - Rank : {player['ranking']}")
 
         return player_database
 
@@ -91,14 +78,14 @@ class PlayerView:
         for key in player:
             print(key, ' : ', player[key])
 
-
     def display_chose_player(self):
         player_database = self.controller.get_all_players()
 
         text = "Choisissez l'id d'un joueur : "
 
         id_choice = input(text)
-        while not id_choice.isdigit() or int(id_choice) not in range(1, (len(player_database) + 1)):
+        while (not id_choice.isdigit()
+               or int(id_choice) not in range(1, (len(player_database) + 1))):
             print('id non valide.\n')
             id_choice = input(text)
 
@@ -106,12 +93,10 @@ class PlayerView:
 
         return id_choice
 
-
     def display_chosen_player(self):
         id_choice = self.display_chose_player()
         self.display_player_by_id(id_choice)
         input('Appuyez sur une touche pour revenir au menu.')
-        
 
     def display_create_player(self):
         self.last_name = self.add_last_name()
@@ -130,7 +115,6 @@ class PlayerView:
         }
 
         return player_data
-        
 
     def add_last_name(self):
         last_name = input('Nom de famille : ')
@@ -147,9 +131,9 @@ class PlayerView:
     def add_birthdate(self):
         birth_day = input('Entrez un jour de naissance : ')
         while(True):
-            if birth_day.isdigit() \
-            and len(birth_day) == 2 \
-            and int(birth_day) <= 31:
+            if (birth_day.isdigit()
+               and len(birth_day) == 2
+               and int(birth_day) <= 31):
                 break
             else:
                 birth_day = input('Jour invalide. '
@@ -158,18 +142,18 @@ class PlayerView:
         birth_month = input('Entrez un mois de naissance : ')
         while(True):
             if birth_month.isdigit() \
-            and len(birth_month) == 2 \
-            and int(birth_month) <= 12:
+               and len(birth_month) == 2 \
+               and int(birth_month) <= 12:
                 break
             else:
                 birth_month = input('Mois invalide. '
-                                    'Entrez un mois de naissance en chiffres : ')
+                                    'Entrez un mois de naissance : ')
 
         birth_year = input('Entrez une année de naissance : ')
         while(True):
             if birth_year.isdigit() \
-            and len(birth_year) == 4 \
-            and int(birth_year) <= 2020:
+               and len(birth_year) == 4 \
+               and int(birth_year) <= 2020:
                 break
             else:
                 birth_year = input('Année invlide. '

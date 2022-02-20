@@ -45,13 +45,3 @@ Le programme est écrit en Python, copier tous les fichiers et repertoires du re
 ```bash
 python main.py
 ```
-
-
-
-## Rapport flake8
-
-Le repository contient un rapport flake8, qui n'affiche aucune erreur. Il est possible d'en générer un nouveau en installant le module ```flake8``` et en entrant dans le terminal :
-
-```bash
-flake8
-```

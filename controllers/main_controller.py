@@ -39,6 +39,6 @@ class MainMenuController:
             elif option == '3':
                 self.tournament_ctrl.run_tournament_search()
             elif option == '4':
-                self.player_ctrl.run_display_player_menu()
+                self.player_controller.run_display_player_menu()
             elif option == '5':
-                self.player_ctrl.run_display_player_search_menu()
+                self.player_controller.run_display_player_search_menu()

@@ -56,8 +56,8 @@ class PlayerView:
     def display_all_players(self):
         player_database = self.controller.get_all_players()
         for player in player_database:
-            print(f"ID : {player['player_id']} - \
-                {player['last_name']} {player['first_name']}")
+            print(f"ID : {player['player_id']} - "
+                  f"{player['last_name']} {player['first_name']}")
 
     def display_players_by(self, sort_key='ranking'):
         assert (sort_key in ['ranking', 'last_name'])
@@ -65,8 +65,9 @@ class PlayerView:
         player_database = self.controller.get_all_players()
         PLAYERS_LIST = sorted(player_database, key=lambda d: d[sort_key])
         for player in PLAYERS_LIST:
-            print(f"ID : {player['player_id']} - {player['last_name']} {player['first_name']} \
-                - Rank : {player['ranking']}")
+            print(f"ID : {player['player_id']} - "
+                  f"{player['last_name']} {player['first_name']} - "
+                  f"Rank : {player['ranking']}")
 
         return player_database
 

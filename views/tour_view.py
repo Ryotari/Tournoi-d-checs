@@ -91,7 +91,6 @@ class TourView:
                 player_2 = sorted_players[i+1]
                 player_1_instance = player_database.get(doc_id=int(player_1))
                 player_2_instance = player_database.get(doc_id=int(player_2))
-                print(player_1_instance)
 
                 if player_instances[str(i+1)] == player_instances[str(i+2)]:
                     if (player_1_instance['ranking'] >
@@ -105,7 +104,6 @@ class TourView:
             player_1 = sorted_players[0]
             player_2 = sorted_players[1]
             del sorted_players[0:2]
-            print(sorted_players)
             match_instance = (match_name, player_1, player_2)
             MATCH_NUMBER += 1
             self.list_of_matchs.append(match_instance)

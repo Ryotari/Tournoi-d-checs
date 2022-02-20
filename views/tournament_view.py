@@ -58,9 +58,9 @@ class TournamentView:
     def display_all_tournaments(self):
         tournament_database = self.controller.get_all_tournaments()
         for tournament in tournament_database:
-            print(f"{tournament['tournament_id']} - \
-                    {tournament['tournament_name']} - \
-                    {tournament['location']}")
+            print(f"{tournament['tournament_id']} - "
+                  f"{tournament['tournament_name']} - "
+                  f"{tournament['location']}")
 
         return tournament_database
 
@@ -205,15 +205,15 @@ class TournamentView:
         while not valid_id:
             print('Liste de joueurs : ')
             for player in player_database:
-                print(f"{player['player_id']} - \
-                        {player['last_name']} \
-                        {player['first_name']}")
+                print(f"{player['player_id']} - "
+                      f"{player['last_name']} "
+                      f"{player['first_name']}")
             print('Joueurs dans le tournoi : \n')
             for player_id in self.players_ids:
                 player = player_database.get(doc_id=player_id)
-                print(f"{player['player_id']} - \
-                        {player['last_name']} \
-                        {player['first_name']}")
+                print(f"{player['player_id']} - "
+                      f"{player['last_name']} "
+                      f"{player['first_name']}")
             print()
             id_choice = input("Entrez l'id du joueur à ajouter : \n")
             try:
@@ -246,9 +246,9 @@ class TournamentView:
 
         for tournament in tournaments_in_progress:
             tournaments_in_progress_id.append(tournament['tournament_id'])
-            print(f"{tournament['tournament_id']} - \
-                    {tournament['tournament_name']} - \
-                    {tournament['location']}")
+            print(f"{tournament['tournament_id']} - "
+                  f"{tournament['tournament_name']} - "
+                  f"{tournament['location']}")
 
         if len(tournaments_in_progress) == 0:
             print('Aucun tournoi en cours.')

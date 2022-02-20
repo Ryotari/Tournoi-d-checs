@@ -26,10 +26,17 @@ Les scripts python se lancent depuis un terminal
 Le programme utilise plusieurs librairies externes, et modules de Python, qui sont repertoriés dans le fichier ```requirements.txt```
 
 Vous pouvez installer un environnement externe via la commande 
+
 ```bash
 pip install venv
 ```
-dans le terminal, puis entrez la commande :
+dans le terminal, puis le lancer avec la commande (Pour Windows Powershell):
+
+```bash
+env/Scripts/activate.ps1
+```
+
+Ensuite, entrez la commande :
 
 ```bash
 pip install -r requirement.txt

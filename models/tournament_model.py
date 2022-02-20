@@ -10,7 +10,6 @@ class Tournament:
     def __init__(self, tournament_controller):
         self.controller = tournament_controller
 
-
     def serialized_tournament(self, tournament):
         tournament_data = {
             'tournament_name': tournament['tournament_name'],
@@ -42,8 +41,6 @@ class Tournament:
         }
         return tournament_data
 
-
-
     def add_tournament_id(self):
         tournament_id = len(tournament_database) + 1
 
@@ -53,8 +50,12 @@ class Tournament:
         tournament_database.insert(tournament)
 
     def update_tournament(self, tournament):
-        tournament_database.update({'list_of_tours': tournament['list_of_tours']}, doc_ids=[tournament['tournament_id']])
-        tournament_database.update({'player_scores': tournament['player_scores']}, doc_ids=[tournament['tournament_id']])
+        tournament_database.update({'list_of_tours':
+                                   tournament['list_of_tours']},
+                                   doc_ids=[tournament['tournament_id']])
+        tournament_database.update({'player_scores':
+                                   tournament['player_scores']},
+                                   doc_ids=[tournament['tournament_id']])
 
     def save_tournament(self, data):
         """Save the tournament and add it to the database"""
@@ -63,5 +64,5 @@ class Tournament:
         print('Le tournoi a été ajouté à la base de données.\n')
 
     def send_tournament_database(self):
-        
+
         return tournament_database

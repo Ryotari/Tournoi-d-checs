@@ -10,7 +10,6 @@ class TourView:
         self.list_of_matchs = []
         self.list_of_finished_matchs = []
 
-
     def display_run_tour_one(self, tournament):
         self.sort_players_by_ranking(tournament)
         self.begin_time = self.display_begin_time()
@@ -31,7 +30,6 @@ class TourView:
 
         return tournament
 
-
     def display_begin_time(self):
         input('Appuyez sur une touche pour lancer le tour')
         begin_time = time.strftime(format('%d/%m/%Y - %Hh%Mm%Ss'))
@@ -40,7 +38,6 @@ class TourView:
         print()
 
         return begin_time
-
 
     def display_end_time(self):
         input('Appuyez sur une touche pour terminer le tour')
@@ -53,7 +50,8 @@ class TourView:
         player_database = self.controller.get_player_database()
         player_instances = []
         for player_id in tournament['players_ids']:
-            player = next(item for item in player_database if item['player_id'] == player_id)
+            player = next(item for item in player_database if
+                          item['player_id'] == player_id)
             player_instances.append(player)
         sorted_players = sorted(player_instances, key=lambda d: d['ranking'])
 
@@ -68,19 +66,20 @@ class TourView:
             match_name = 'Match' + str(MATCH_NUMBER)
             player_1 = first_half[i]
             player_2 = second_half[i]
-            match_instance = (match_name, player_1['player_id'], player_2['player_id'])
+            match_instance = (match_name,
+                              player_1['player_id'],
+                              player_2['player_id'])
             MATCH_NUMBER += 1
             self.list_of_matchs.append(match_instance)
-
 
     def sort_players_by_score(self, tournament):
         player_database = self.controller.get_player_database()
         self.list_of_matchs.clear()
         self.list_of_finished_matchs.clear()
         player_instances = tournament['player_scores']
-        """sorted_players = sorted(player_instances.items(), key=lambda d:d[1], reverse=True)
-        print(sorted_players)"""
-        sorted_players = list({player_id: player_score for player_id, player_score in sorted(player_instances.items(), key=lambda item: item[1], reverse = True)})
+        sorted_players = (list({player_id: player_score for player_id,
+                               player_score in sorted(player_instances.items(),
+                                key=lambda item: item[1], reverse=True)}))
 
         NB_MATCHS = len(sorted_players)
         player_1 = None
@@ -95,7 +94,8 @@ class TourView:
                 print(player_1_instance)
 
                 if player_instances[str(i+1)] == player_instances[str(i+2)]:
-                    if player_1_instance['ranking'] > player_2_instance['ranking']:
+                    if (player_1_instance['ranking'] >
+                       player_2_instance['ranking']):
                         sorted_players[i] = player_2
                         sorted_players[i+1] = player_1
 
@@ -110,7 +110,6 @@ class TourView:
             MATCH_NUMBER += 1
             self.list_of_matchs.append(match_instance)
 
-
     def display_tour(self, tournament):
         list_of_matchs = self.list_of_matchs
         tour_name = "Tour " + str(len(tournament['list_of_tours']) + 1)
@@ -123,20 +122,22 @@ class TourView:
 
     def display_entry_scores(self, tournament):
         list_of_matchs = self.list_of_matchs
-        for match in list_of_matchs: 
+        for match in list_of_matchs:
             player_1 = str(match[1])
             player_2 = str(match[2])
             valid_match_score = False
             while not valid_match_score:
                 score_player_1 = input(f'Entrez le score de {match[1]} : ')
 
-                while not score_player_1.isdigit() and score_player_1 not in [0, 0.5, 1]:
+                while not (score_player_1.isdigit()
+                           and score_player_1 not in [0, 0.5, 1]):
                     print('Score non valide.\n')
                     score_player_1 = input(f'Entrez le score de {match[1]} : ')
                 score_player_1 = int(score_player_1)
 
                 score_player_2 = input(f'Entrez le score de {match[2]} : ')
-                while not score_player_2.isdigit() and score_player_2 not in [0, 0.5, 1]:
+                while not (score_player_2.isdigit()
+                           and score_player_2 not in [0, 0.5, 1]):
                     print('Score non valide.\n')
                     score_player_2 = input(f'Entrez le score de {match[2]} : ')
                 score_player_2 = int(score_player_2)
@@ -145,7 +146,7 @@ class TourView:
                     tournament['player_scores'][player_1] += score_player_1
                     tournament['player_scores'][player_2] += score_player_2
                     print('Score enregistré. \n')
-        
+
             self.list_of_finished_matchs.append(([match[1], score_player_1],
                                                  [match[2], score_player_2]))
         print(self.list_of_finished_matchs)

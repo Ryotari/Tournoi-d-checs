@@ -3,11 +3,11 @@ from tinydb import TinyDB
 
 player_database = TinyDB('models/players.json')
 
+
 class Player:
     """Create an instance of a player"""
     def __init__(self, player_controller):
         self.controller = player_controller
-
 
     def serialized_player(self, player):
         player_data = {
@@ -21,7 +21,6 @@ class Player:
 
         return player_data
 
-
     def unserialized_player(self, serialized_player):
         last_name = serialized_player['last_name']
         first_name = serialized_player['first_name']
@@ -29,9 +28,9 @@ class Player:
         gender = serialized_player['gender']
         ranking = serialized_player['ranking']
         player_id = serialized_player['player_id']
-        
+
         return Player(last_name,
-                      first_name, 
+                      first_name,
                       birthdate,
                       gender,
                       ranking,
@@ -40,13 +39,11 @@ class Player:
 
     def add_player_id(self):
         player_id = len(player_database) + 1
-        
+
         return player_id
 
-        
     def add_player_to_database(self, player):
         player_database.insert(player)
-
 
     def save_player(self, data):
         player = self.serialized_player(data)

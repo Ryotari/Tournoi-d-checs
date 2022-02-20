@@ -15,7 +15,6 @@ class TournamentMenus:
 class TournamentView:
     """Display the inputs to create a tournament"""
 
-
     def __init__(self, tournament_controller):
         self.controller = tournament_controller
         self.tournament_name = None
@@ -30,7 +29,6 @@ class TournamentView:
         self.list_of_tours = []
         # self.player_scores = {player_id:0 for player_id in self.players_ids}
 
-
     def display_create_tournament(self):
         self.tournament_name = self.add_tournament_name()
         self.location = self.add_location()
@@ -40,7 +38,7 @@ class TournamentView:
         self.description = self.add_description()
         self.tournament_id = self.controller.return_tournament_id()
         self.add_players_to_tournament()
-        self.player_scores = {player_id:0 for player_id in self.players_ids}
+        self.player_scores = {player_id: 0 for player_id in self.players_ids}
         self.list_of_tours = []
         tournament_data = {
             'tournament_name': self.tournament_name,
@@ -57,23 +55,25 @@ class TournamentView:
 
         return tournament_data
 
-
     def display_all_tournaments(self):
         tournament_database = self.controller.get_all_tournaments()
         for tournament in tournament_database:
-            print(f"{tournament['tournament_id']} - {tournament['tournament_name']} - {tournament['location']}")
+            print(f"{tournament['tournament_id']} - \
+                    {tournament['tournament_name']} - \
+                    {tournament['location']}")
 
         return tournament_database
-
 
     def display_chosen_tournament(self):
         tournament_database = self.controller.get_all_tournaments()
 
         message = "Choisissez l'id d'un tournoi : "
-        
+
         id_choice = input(message)
 
-        while not id_choice.isdigit() or int(id_choice) not in range(1, (len(tournament_database) + 1)):
+        while not (id_choice.isdigit()
+                   or int(id_choice) not
+                   in range(1, (len(tournament_database) + 1))):
             print('id non valide.\n')
             id_choice = input(message)
 
@@ -85,7 +85,6 @@ class TournamentView:
         print()
         input('Appuyez sur une touche pour revenir au menu.')
 
-
     def add_tournament_name(self):
         tournament_name = input('Nom du tournoi : ')
         while tournament_name == '':
@@ -94,7 +93,6 @@ class TournamentView:
 
         return tournament_name
 
-
     def add_location(self):
         location = input('Lieu du tournoi : ')
         while location == '':
@@ -102,13 +100,12 @@ class TournamentView:
                              'Entrez le lieu du tournoi : ')
         return location
 
-
     def add_tournament_date(self):
         tournament_day = input('Entrez le jour du tournoi : ')
         while(True):
-            if tournament_day.isdigit() \
-            and len(tournament_day) == 2 \
-            and int(tournament_day) <= 31:
+            if (tournament_day.isdigit()
+               and len(tournament_day) == 2
+               and int(tournament_day) <= 31):
                 break
             else:
                 tournament_day = input('Jour invalide. '
@@ -116,19 +113,20 @@ class TournamentView:
 
         tournament_month = input('Entrez le mois du tournoi : ')
         while(True):
-            if tournament_month.isdigit() \
-            and len(tournament_month) == 2 \
-            and int(tournament_month) <= 12:
+            if (tournament_month.isdigit()
+               and len(tournament_month) == 2
+               and int(tournament_month) <= 12):
                 break
             else:
                 tournament_month = input('Mois invalide. '
-                                         'Entrez le mois du tournoi en chiffres : ')
+                                         'Entrez le mois du '
+                                         'tournoi en chiffres : ')
 
         tournament_year = input('Entrez l\'année du tournoi : ')
         while(True):
-            if tournament_year.isdigit() \
-            and len(tournament_year) == 4 \
-            and int(tournament_year) >= 2021:
+            if (tournament_year.isdigit()
+               and len(tournament_year) == 4
+               and int(tournament_year) >= 2021):
                 break
             else:
                 tournament_year = input('Année invlide. '
@@ -137,7 +135,6 @@ class TournamentView:
 
         return date
 
-
     def add_number_of_tours(self):
         number_of_tours = 4
         print('Le nombre de tours par défaut est de 4. \n'
@@ -145,7 +142,8 @@ class TournamentView:
 
         valid_tours_number = False
         while not valid_tours_number:
-            tour_choice = input("Entrez 'Y' pour changer, ou 'N' pour garder 4 : ")
+            tour_choice = input("Entrez 'Y' pour changer, "
+                                "ou 'N' pour garder 4 : ")
             if tour_choice.upper() == 'Y':
                 number_of_tours = input('Entrez le nombre de tours : ')
                 if number_of_tours.isdigit():
@@ -157,7 +155,6 @@ class TournamentView:
                 valid_tours_number = True
 
         return number_of_tours
-
 
     def add_time_control(self):
         print('Choisissez le contrôle du temps.\n'
@@ -182,19 +179,17 @@ class TournamentView:
 
         return time_control
 
-
     def add_description(self):
         description = input('Entrez une description du tournoi : ')
 
         return description
 
-
-
     def add_players_to_tournament(self):
-        
+
         while(True):
             add_player_choice = input("Voulez-vous ajouter un joueur ?\n"
-                                      "Appuyer sur 'Y' pour confirmer, ou 'N' pour ignorer : ")
+                                      "Appuyer sur 'Y' pour confirmer, "
+                                      "ou 'N' pour ignorer : ")
 
             if add_player_choice.upper() == 'Y':
                 self.add_player_to_tournament()
@@ -203,7 +198,6 @@ class TournamentView:
             else:
                 print('Commande non reconnue')
 
-
     def add_player_to_tournament(self):
         player_database = self.controller.return_all_players()
 
@@ -211,11 +205,15 @@ class TournamentView:
         while not valid_id:
             print('Liste de joueurs : ')
             for player in player_database:
-                print(f"{player['player_id']} - {player['last_name']} {player['first_name']}")
+                print(f"{player['player_id']} - \
+                        {player['last_name']} \
+                        {player['first_name']}")
             print('Joueurs dans le tournoi : \n')
             for player_id in self.players_ids:
                 player = player_database.get(doc_id=player_id)
-                print(f"{player['player_id']} - {player['last_name']} {player['first_name']}")
+                print(f"{player['player_id']} - \
+                        {player['last_name']} \
+                        {player['first_name']}")
             print()
             id_choice = input("Entrez l'id du joueur à ajouter : \n")
             try:
@@ -225,7 +223,7 @@ class TournamentView:
             else:
                 valid_id = True
         id_choice = int(id_choice)
-        
+
         if id_choice <= 0 or id_choice > len(player_database):
             print('id de joueur non reconnu\n')
 
@@ -234,20 +232,23 @@ class TournamentView:
 
         else:
             self.players_ids.append(id_choice)
-            print(f"Le joueur avec l'id {id_choice} a été ajouté au tournoi\n\n")
-
+            print(f"Le joueur avec l'id {id_choice} "
+                  "a été ajouté au tournoi\n\n")
 
     def select_tournament(self):
         tournament_database = self.controller.get_all_tournaments()
         tournaments_in_progress = []
         tournaments_in_progress_id = []
         for tournament in tournament_database:
-            if len(tournament['list_of_tours']) < int(tournament['number_of_tours']):
+            if (len(tournament['list_of_tours']) <
+               int(tournament['number_of_tours'])):
                 tournaments_in_progress.append(tournament)
 
         for tournament in tournaments_in_progress:
             tournaments_in_progress_id.append(tournament['tournament_id'])
-            print(f"{tournament['tournament_id']} - {tournament['tournament_name']} - {tournament['location']}")
+            print(f"{tournament['tournament_id']} - \
+                    {tournament['tournament_name']} - \
+                    {tournament['location']}")
 
         if len(tournaments_in_progress) == 0:
             print('Aucun tournoi en cours.')
@@ -256,7 +257,8 @@ class TournamentView:
         message = "Entrez l'id du tournoi choisi : "
         id_choice = input(message)
 
-        while not id_choice.isdigit() or int(id_choice) not in tournaments_in_progress_id:
+        while not (id_choice.isdigit()
+                   or int(id_choice) not in tournaments_in_progress_id):
             print('id de tournoi non valide.\n')
             id_choice = input("Entrez l'id du tournoi choisi : ")
 

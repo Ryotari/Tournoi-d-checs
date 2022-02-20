@@ -4,13 +4,11 @@ from views import tour_view
 
 class TourController:
 
-
     def __init__(self, main_controller, player_controller):
         self.view = tour_view.TourView(self)
         self.model = tour_model.Tour(self)
         self.main_controller = main_controller
         self.player_controller = player_controller
-
 
     def run_tour_one(self, tournament):
         return self.view.display_run_tour_one(tournament)
@@ -21,5 +19,3 @@ class TourController:
     def get_player_database(self):
 
         return self.player_controller.get_all_players()
-
-    

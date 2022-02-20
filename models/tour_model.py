@@ -1,10 +1,7 @@
-
-
 class Tour:
 
     def __init__(self, tour_controller):
         self.controller = tour_controller
-
 
     def serialized_tour(self, tour):
         tour_informations = {
@@ -25,4 +22,3 @@ class Tour:
                     end_time,
                     list_of_finished_matchs
                     )
-

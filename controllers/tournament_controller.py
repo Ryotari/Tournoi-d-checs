@@ -16,11 +16,9 @@ class TournamentController:
         tournament_data = self.view.display_create_tournament()
         self.model.save_tournament(tournament_data)
 
-
     def return_tournament_id(self):
 
         return self.model.add_tournament_id()
-
 
     def run_tournament_search(self):
         tournament_database = self.view.display_all_tournaments()
@@ -29,25 +27,21 @@ class TournamentController:
         else:
             self.view.display_chosen_tournament()
 
-
     def return_all_players(self):
 
         return self.player_controller.get_all_players()
-
 
     def return_unserialized_player(self):
 
         return self.player_controller.return_unserialized_player()
 
-
     def get_all_tournaments(self):
 
         return self.model.send_tournament_database()
 
-
     def load_tournament(self):
         tournament = self.view.select_tournament()
-        if tournament == None:
+        if tournament is None:
             return
         tournament = self.model.unserialized_tournament(tournament)
 
@@ -55,14 +49,15 @@ class TournamentController:
             tournament = self.tour_controller.run_tour_one(tournament)
             self.save_tour(tournament)
 
-            while len(tournament['list_of_tours']) < tournament['number_of_tours']:
+            while (len(tournament['list_of_tours']) <
+                   tournament['number_of_tours']):
                 tournament = self.tour_controller.run_other_tours(tournament)
                 self.save_tour(tournament)
         else:
-            while len(tournament['list_of_tours']) < tournament['number_of_tours']:
+            while (len(tournament['list_of_tours']) <
+                   tournament['number_of_tours']):
                 tournament = self.tour_controller.run_other_tours(tournament)
                 self.save_tour(tournament)
-
 
     def save_tour(self, tournament):
         self.model.update_tournament(tournament)

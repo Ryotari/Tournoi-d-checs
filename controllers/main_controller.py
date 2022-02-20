@@ -2,13 +2,7 @@ import sys
 from controllers import player_controller
 from controllers import tournament_controller
 from controllers import tour_controller
-from views import player_view
-from views import tournament_view
-from views import tour_view
 from views import main_view
-from models import player_model
-from models import tournament_model
-from models import tour_model
 
 
 class MainMenuController:
@@ -25,9 +19,13 @@ class MainMenuController:
     def __init__(self):
         self.view = main_view.MainMenu()
         self.player_controller = player_controller.PlayerController(self)
-        self.tour_controller = tour_controller.TourController(self, self.player_controller)
-        self.tournament_controller = tournament_controller.TournamentController(self, self.player_controller, self.tour_controller)
-        
+        self.tour_controller = (tour_controller.
+                                TourController(self, self.player_controller))
+        self.tournament_ctrl = (tournament_controller.
+                                TournamentController(self,
+                                                     self.player_controller,
+                                                     self.tour_controller))
+
     def run(self):
         while(True):
             option = self.view.display_home()
@@ -35,12 +33,12 @@ class MainMenuController:
             if option == '0':
                 sys.exit()
             elif option == '1':
-                self.tournament_controller.create_tournament()
+                self.tournament_ctrl.create_tournament()
             elif option == '2':
-                self.tournament_controller.load_tournament()
+                self.tournament_ctrl.load_tournament()
             elif option == '3':
-                self.tournament_controller.run_tournament_search()
+                self.tournament_ctrl.run_tournament_search()
             elif option == '4':
-                self.player_controller.run_display_player_menu()
+                self.player_ctrl.run_display_player_menu()
             elif option == '5':
-                self.player_controller.run_display_player_search_menu()
+                self.player_ctrl.run_display_player_search_menu()
